@@ -5,9 +5,12 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
     base: './',
     plugins: [
-        react(),
+        react()
     ],
     server: {
         port: 8080
+    },
+    define: {
+        global: 'globalThis'
     }
 })

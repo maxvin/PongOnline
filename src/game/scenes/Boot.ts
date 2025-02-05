@@ -4,7 +4,7 @@ export class Boot extends Scene
 {
     constructor ()
     {
-        super('Boot');
+        super({ key: 'Boot' });
     }
 
     preload ()
@@ -17,6 +17,14 @@ export class Boot extends Scene
 
     create ()
     {
-        this.scene.start('Preloader');
+        // Configure physics
+        this.physics.world.setBounds(0, 0, 800, 600);
+        this.physics.world.setBoundsCollision(false, false, true, true);
+
+        // Set background color
+        this.cameras.main.setBackgroundColor('#000000');
+
+        // Move to the main menu
+        this.scene.start('MainMenu');
     }
 }

@@ -1,36 +1,80 @@
-import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
 
 export class GameOver extends Scene
 {
-    camera: Phaser.Cameras.Scene2D.Camera;
-    background: Phaser.GameObjects.Image;
-    gameOverText : Phaser.GameObjects.Text;
+    private winner: string = '';
+    private score: string = '';
 
-    constructor ()
+    constructor()
     {
-        super('GameOver');
+        super({ key: 'GameOver' });
     }
 
-    create ()
+    init(data: { winner: string; score: string })
     {
-        this.camera = this.cameras.main
-        this.camera.setBackgroundColor(0xff0000);
-
-        this.background = this.add.image(512, 384, 'background');
-        this.background.setAlpha(0.5);
-
-        this.gameOverText = this.add.text(512, 384, 'Game Over', {
-            fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
-            align: 'center'
-        }).setOrigin(0.5).setDepth(100);
-        
-        EventBus.emit('current-scene-ready', this);
+        this.winner = data.winner;
+        this.score = data.score;
     }
 
-    changeScene ()
+    create()
     {
-        this.scene.start('MainMenu');
+        const { width, height } = this.scale;
+
+        // Game Over text
+        this.add.text(width / 2, height / 3, 'Game Over!', {
+            fontSize: '64px',
+            color: '#ffffff'
+        }).setOrigin(0.5);
+
+        // Winner text
+        this.add.text(width / 2, height / 2, `${this.winner} Player Wins!`, {
+            fontSize: '48px',
+            color: '#ffffff'
+        }).setOrigin(0.5);
+
+        // Score text
+        this.add.text(width / 2, height / 2 + 60, `Final Score: ${this.score}`, {
+            fontSize: '32px',
+            color: '#ffffff'
+        }).setOrigin(0.5);
+
+        // Return to Menu button
+        const menuButton = this.add.text(width / 2, height * 0.7, 'Return to Menu', {
+            fontSize: '32px',
+            color: '#ffffff',
+            backgroundColor: '#000000',
+            padding: { x: 20, y: 10 }
+        })
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true });
+
+        // Play Again button
+        const playAgainButton = this.add.text(width / 2, height * 0.7 + 60, 'Play Again', {
+            fontSize: '32px',
+            color: '#ffffff',
+            backgroundColor: '#000000',
+            padding: { x: 20, y: 10 }
+        })
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true });
+
+        menuButton.on('pointerdown', () => {
+            this.scene.start('MainMenu');
+        });
+
+        playAgainButton.on('pointerdown', () => {
+            this.scene.start('Game', { mode: 'local' });
+        });
+
+        // Button hover effects
+        [menuButton, playAgainButton].forEach(button => {
+            button.on('pointerover', () => {
+                button.setTint(0x00ff00);
+            });
+
+            button.on('pointerout', () => {
+                button.clearTint();
+            });
+        });
     }
 }

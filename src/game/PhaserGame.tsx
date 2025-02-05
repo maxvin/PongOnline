@@ -33,7 +33,6 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
             }
 
         }
-
         return () =>
         {
             if (game.current)
@@ -78,3 +77,4 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
     );
 
 });
+
